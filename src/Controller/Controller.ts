@@ -57,19 +57,24 @@ export default class Controller {
     }
 
     public static async searchWeatherData(req: Request, res: Response) {
-        const date = req.body.date;
+        try {
+            const date = req.body.date;
 
-        const dateObj = new Date(date); // convert the string to a Date object
+            const dateObj = new Date(date); // convert the string to a Date object
 
-        const weatherData = await Weather.findOne({
-            datetime: {
-                $gte: dateObj.toISOString(),
-            }
-        });
+            const weatherData = await Weather.findOne({
+                datetime: {
+                    $gte: dateObj.toISOString(),
+                }
+            });
 
-        if (!weatherData) return res.status(404).send("No information found.");
+            if (!weatherData) return res.status(404).send("No information found.");
 
-        res.status(200).json(weatherData);
+            res.status(200).json(weatherData);
+        } catch (error: any) {
+            console.log(error)
+            res.status(500).json(error.message)
+        }
     }
 
     public static async editWeatherData(req: Request, res: Response) {
