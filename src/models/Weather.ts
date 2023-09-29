@@ -4,6 +4,10 @@ const { Schema } = mongoose;
 
 const weatherSchema = new Schema(
     {
+        weather: {
+            type: String,
+            required: true
+        },
         temp: {
             type: Decimal128,
             required: true,

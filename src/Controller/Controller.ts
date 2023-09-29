@@ -7,11 +7,11 @@ import { Request, Response } from "express";
 export default class Controller {
     public static async addWeatherData(req: Request, res: Response) {
         try {
-            const { temp, sens_term, umid, datetime, cidade } = req.body
+            const { weather, temp, sens_term, umid, datetime, cidade } = req.body
             console.log(req.body);
 
 
-            if (!temp || !sens_term || !umid || !datetime || !cidade) {
+            if (!weather || !temp || !sens_term || !umid || !datetime || !cidade) {
                 return res.status(400).send("Missing information.");
             }
 
@@ -21,6 +21,7 @@ export default class Controller {
             console.log(isoDatetime);
 
             const weatherData = new Weather({
+                weather,
                 temp,
                 sens_term,
                 umid,
@@ -79,12 +80,13 @@ export default class Controller {
 
             if (!weatherData) return res.status(404).send('Weather data not found.');
 
-            const { temp, sens_term, umid, datetime, cidade } = req.body;
+            const { weather, temp, sens_term, umid, datetime, cidade } = req.body;
 
-            if (!temp && !sens_term && !umid && !datetime && !cidade) {
+            if (!weather && !temp && !sens_term && !umid && !datetime && !cidade) {
                 return res.status(400).send('No parameter specified for edition.');
             }
 
+            if (weather) weatherData.weather = weather;
             if (temp) weatherData.temp = temp;
             if (sens_term) weatherData.sens_term = sens_term;
             if (umid) weatherData.umid = umid;
