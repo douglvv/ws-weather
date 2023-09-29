@@ -2,7 +2,7 @@ import axios from "axios";
 import mongoose from "mongoose";
 import Weather from "./models/Weather";
 import { Request, Response } from "express";
-import endOfDay from 'date-fns/endOfDay'
+
 
 export default class Controller {
     public static async addWeatherData(req: Request, res: Response) {
@@ -56,18 +56,18 @@ export default class Controller {
     }
 
     public static async searchWeatherData(req: Request, res: Response) {
-        const dateString: string = req.body.date;
-        const date = new Date(dateString); // converter a string em um objeto
+        const date = req.body.date;
 
-        const weatherData = await Weather.find({
+        const dateObj = new Date(date); // convert the string to a Date object
+    
+        const weatherData = await Weather.findOne({
             datetime: {
-                $gte: date.toISOString(),
-                $lte: endOfDay(date).toISOString()
+                $gte: dateObj.toISOString(),
             }
         });
-
+    
         if (!weatherData) return res.status(404).send("No information found.");
-
+    
         res.status(200).json(weatherData);
     }
 }

@@ -15,8 +15,9 @@ app.use(cors());
 app.use(express.json());
 
 
-app.post('/addWeatherData', Controller.addWeatherData )
-app.get('/getCurrentWeatherData', Controller.getCurrentWeatherData)
+app.post('/addWeatherData', Controller.addWeatherData );
+app.get('/getCurrentWeatherData', Controller.getCurrentWeatherData);
+app.get('/searchWeatherData', Controller.searchWeatherData);
 
 db.connect().then(() => {
     app.listen(PORT, () => {
