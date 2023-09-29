@@ -1,6 +1,6 @@
 import axios from "axios";
 import mongoose from "mongoose";
-import Weather from "./models/Weather";
+import Weather from "../models/Weather";
 import { Request, Response } from "express";
 
 

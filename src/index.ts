@@ -3,7 +3,7 @@ import cors = require('cors');
 import axios from 'axios';
 import * as dotenv from 'dotenv';
 import db from './db/conn';
-import Controller from './Controller';
+import Controller from './Controller/Controller';
 
 dotenv.config();
 
