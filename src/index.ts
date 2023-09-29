@@ -18,6 +18,9 @@ app.use(express.json());
 app.post('/addWeatherData', Controller.addWeatherData );
 app.get('/getCurrentWeatherData', Controller.getCurrentWeatherData);
 app.get('/searchWeatherData', Controller.searchWeatherData);
+app.put('/editWeatherData/:id', Controller.editWeatherData);
+app.delete('/deleteWeatherData/:id', Controller.deleteWeatherData);
+
 
 db.connect().then(() => {
     app.listen(PORT, () => {

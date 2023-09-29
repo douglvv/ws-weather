@@ -59,15 +59,60 @@ export default class Controller {
         const date = req.body.date;
 
         const dateObj = new Date(date); // convert the string to a Date object
-    
+
         const weatherData = await Weather.findOne({
             datetime: {
                 $gte: dateObj.toISOString(),
             }
         });
-    
+
         if (!weatherData) return res.status(404).send("No information found.");
-    
+
         res.status(200).json(weatherData);
     }
+
+    public static async editWeatherData(req: Request, res: Response) {
+        try {
+            const id = req.params.id;
+
+            let weatherData = await Weather.findById(id);
+
+            if (!weatherData) return res.status(404).send('Weather data not found.');
+
+            const { temp, sens_term, umid, datetime, cidade } = req.body;
+
+            if (!temp && !sens_term && !umid && !datetime && !cidade) {
+                return res.status(400).send('No parameter specified for edition.');
+            }
+
+            if (temp) weatherData.temp = temp;
+            if (sens_term) weatherData.sens_term = sens_term;
+            if (umid) weatherData.umid = umid;
+            if (datetime) weatherData.datetime = datetime;
+            if (cidade) weatherData.cidade = cidade;
+
+            await weatherData.save();
+
+            res.status(200).json(weatherData);
+        } catch (error: any) {
+            console.log(error.message);
+            res.status(500).send(error.message);
+        }
+    }
+
+    public static async deleteWeatherData(req: Request, res: Response) {
+        try {
+            const id = req.params.id;
+
+            const deletedWeatherData = await Weather.findByIdAndDelete(id);
+
+            if (!deletedWeatherData) return res.status(404).send('Weather data not found.');
+
+            res.status(200).send('Weather data deleted successfully.');
+        } catch (error: any) {
+            console.log(error.message);
+            res.status(500).send(error.message);
+        }
+    }
+
 }
