@@ -2,16 +2,17 @@ import axios from "axios";
 import mongoose from "mongoose";
 import Weather from "../models/Weather";
 import { Request, Response } from "express";
+const translate = require('@iamtraction/google-translate');
 
 
 export default class Controller {
     public static async addWeatherData(req: Request, res: Response) {
         try {
-            const { weather, temp, sens_term, umid, datetime, cidade } = req.body
+            let { weather, weather_icon, temp, sens_term, umid, datetime, cidade } = req.body
             console.log(req.body);
 
 
-            if (!weather || !temp || !sens_term || !umid || !datetime || !cidade) {
+            if (!weather || !weather_icon || !temp || !sens_term || !umid || !datetime || !cidade) {
                 return res.status(400).send("Missing information.");
             }
 
@@ -20,8 +21,17 @@ export default class Controller {
             const isoDatetime = timestamp.toISOString();
             console.log(isoDatetime);
 
+            //traduz a descricao para pt-br
+            await translate(weather, { from: 'en', to: 'pt' })
+                .then((res: { text: any; }) => {
+                    weather = res.text
+                }).catch((err: any) => {
+                    console.error(err);
+                });
+
             const weatherData = new Weather({
                 weather,
+                weather_icon,
                 temp,
                 sens_term,
                 umid,
@@ -85,13 +95,14 @@ export default class Controller {
 
             if (!weatherData) return res.status(404).send('Weather data not found.');
 
-            const { weather, temp, sens_term, umid, datetime, cidade } = req.body;
+            const { weather, weather_icon, temp, sens_term, umid, datetime, cidade } = req.body;
 
-            if (!weather && !temp && !sens_term && !umid && !datetime && !cidade) {
+            if (!weather && !weather_icon && !temp && !sens_term && !umid && !datetime && !cidade) {
                 return res.status(400).send('No parameter specified for edition.');
             }
 
             if (weather) weatherData.weather = weather;
+            if (weather_icon) weatherData.weather_icon = weather_icon;
             if (temp) weatherData.temp = temp;
             if (sens_term) weatherData.sens_term = sens_term;
             if (umid) weatherData.umid = umid;

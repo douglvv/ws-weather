@@ -8,16 +8,20 @@ const weatherSchema = new Schema(
             type: String,
             required: true
         },
+        weather_icon: {
+            type: String,
+            required: true
+        },
         temp: {
-            type: Decimal128,
+            type: Number,
             required: true,
         },
         sens_term: {
-            type: Decimal128,
+            type: Number,
             required: true,
         },
         umid: {
-            type: Decimal128,
+            type: Number,
             required: true,
         },
         datetime: {
