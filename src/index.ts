@@ -17,7 +17,7 @@ app.use(express.json());
 
 app.post('/addWeatherData', Controller.addWeatherData );
 app.get('/getCurrentWeatherData', Controller.getCurrentWeatherData);
-app.get('/searchWeatherData', Controller.searchWeatherData);
+app.post('/searchWeatherData', Controller.searchWeatherData);
 app.put('/editWeatherData/:id', Controller.editWeatherData);
 app.delete('/deleteWeatherData/:id', Controller.deleteWeatherData);
 

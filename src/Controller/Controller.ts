@@ -68,13 +68,11 @@ export default class Controller {
 
     public static async searchWeatherData(req: Request, res: Response) {
         try {
-            const date = req.body.date;
-
-            const dateObj = new Date(date); // convert the string to a Date object
+            const date: String = req.body.date; // Recebe a data com uma String ISO do frontend
 
             const weatherData = await Weather.findOne({
                 datetime: {
-                    $gte: dateObj.toISOString(),
+                    $gte: date,
                 }
             });
 
