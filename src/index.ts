@@ -20,6 +20,7 @@ app.get('/getCurrentWeatherData', Controller.getCurrentWeatherData);
 app.post('/searchWeatherData', Controller.searchWeatherData);
 app.put('/editWeatherData/:id', Controller.editWeatherData);
 app.delete('/deleteWeatherData/:id', Controller.deleteWeatherData);
+app.get('/getWeatherById/:id', Controller.getWeatherById);
 
 
 db.connect().then(() => {

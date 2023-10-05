@@ -55,7 +55,7 @@ export default class Controller {
             // sort - organiza a busca pelo parametro passado -> datetime
             // datetime: -1 - indica que a busca será em ordem decrescente
             // ultimo item adicionado primeiro
-            const currentWeather = await Weather.findOne({}).sort({ datetime: -1 });
+            const currentWeather = await Weather.findOne({}).sort({ createdAt: -1 });
 
             if (!currentWeather) return res.status(404).send("No information found.");
 
@@ -71,7 +71,7 @@ export default class Controller {
             const date: String = req.body.date; // Recebe a data com uma String ISO do frontend
 
             const weatherData = await Weather.findOne({
-                datetime: {
+                createdAt: {
                     $gte: date,
                 }
             });
@@ -94,7 +94,7 @@ export default class Controller {
             if (!weatherData) return res.status(404).send('Weather data not found.');
 
             const { weather, weather_icon, temp, sens_term, umid, datetime, cidade } = req.body;
-
+        
             if (!weather && !weather_icon && !temp && !sens_term && !umid && !datetime && !cidade) {
                 return res.status(400).send('No parameter specified for edition.');
             }
@@ -108,6 +108,7 @@ export default class Controller {
             if (cidade) weatherData.cidade = cidade;
 
             await weatherData.save();
+            console.log('Dados editados: ',weatherData)
 
             res.status(200).json(weatherData);
         } catch (error: any) {
@@ -122,9 +123,27 @@ export default class Controller {
 
             const deletedWeatherData = await Weather.findByIdAndDelete(id);
 
-            if (!deletedWeatherData) return res.status(404).send('Weather data not found.');
+            if (!deletedWeatherData) {
+                console.log('Error on deleting data', id)
+                return res.status(404).send('Weather data not found.');
+            }
 
+
+            console.log(id, 'deleted successfully')
             res.status(200).send('Weather data deleted successfully.');
+        } catch (error: any) {
+            console.log(error.message);
+            res.status(500).send(error.message);
+        }
+    }
+
+    public static async getWeatherById(req: Request, res: Response) {
+        try {
+            const id = req.params.id;
+
+            const weatherData = await Weather.findById(id)
+
+            res.status(200).json(weatherData);
         } catch (error: any) {
             console.log(error.message);
             res.status(500).send(error.message);
